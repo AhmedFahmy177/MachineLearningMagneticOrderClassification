@@ -1,10 +1,5 @@
 # Machine Learning for Magnetic Order Classification
 
-## Team
-Ahmed Fahmy, Murod Mirzhalilov, Brandon Abrego, Sayok Chakravarty  
-🔗 [GitHub Repository](https://github.com/AhmedFahmy177/MachineLearningMagneticOrderClassification/tree/main)
-
----
 
 ## 📌 Project Overview
 

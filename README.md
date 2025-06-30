@@ -16,6 +16,8 @@ Materials scientists, Spintronics and quantum technology developers, Experimenta
 * Throughput: Efficient reduction of computational time compared to time-consuming DFT calculations.
 * Bias correction in Materials Project: How many FM compounds on the Materials Project can we predict though the MAGNDATA classifier to be non-FMs.
 
+## Note added: Materials Project imported datasets were uploaded on drive and can be accessed through this link: https://drive.google.com/drive/folders/1xK5PtVjRqytAW8MTL-OrDUDEHa63piB-?usp=sharing, while MAGNDATA web scraped datasets were added to the Data Collecting folder.
+
 ## Approach
 
 The first part focused on supervised classification models to predict the magnetic ordering of materials on the Materials Project which contains \~150,000 materials with magnetic labels, and the second part focused on building an efficient propagation vector classifier on MAGNDATA, containing \~2,100 commensurate magnetic materials, and then applied to compounds on Materials Project.

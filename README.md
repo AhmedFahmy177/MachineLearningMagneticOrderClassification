@@ -16,7 +16,8 @@ Materials scientists, Spintronics and quantum technology developers, Experimenta
 * Throughput: Efficient reduction of computational time compared to time-consuming DFT calculations.
 * Bias correction in Materials Project: How many FM compounds on the Materials Project can we predict though the MAGNDATA classifier to be non-FMs.
 
-## Note added: Materials Project imported datasets were uploaded on drive and can be accessed through this link: https://drive.google.com/drive/folders/1xK5PtVjRqytAW8MTL-OrDUDEHa63piB-?usp=sharing, while MAGNDATA web scraped datasets were added to the Data Collecting folder.
+## Note added:
+Materials Project imported datasets were uploaded on drive and can be accessed through this link: https://drive.google.com/drive/folders/1xK5PtVjRqytAW8MTL-OrDUDEHa63piB-?usp=sharing, while MAGNDATA web scraped datasets were added to the Data Collecting folder.
 
 ## Approach
 

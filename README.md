@@ -1,92 +1,60 @@
-# Machine Learning for Magnetic Order Classification
+Machine Learning Magnetism
 
+Team: Ahmed Fahmy, Murod Mirzhalilov, Brandon Abrego, Sayok ChakravartyGitHub: https://github.com/AhmedFahmy177/MachineLearningMagneticOrderClassification/tree/main
 
-## 📌 Project Overview
+Project Overview
 
-As the demand for scalable, accurate, and cost-effective materials discovery grows, data-driven approaches have become essential to accelerating scientific breakthroughs. Magnetism plays a central role in a wide range of advanced technologies, including spintronic devices, magnetic memory storage, and emerging quantum information systems. However, traditional techniques—such as neutron scattering and DFT calculations—are often resource-intensive or computationally prohibitive, limiting their scalability.
+As the demand for scalable, accurate, and cost-effective materials discovery grows, data-driven approaches have become essential to accelerating scientific breakthroughs. Magnetism plays a fundamental role in a wide range of advanced technologies, including spintronic devices, magnetic memory storage, and emerging quantum information systems. However, traditional methods for identifying magnetic properties—such as neutron scattering experiments or density functional theory (DFT) calculations—are either resource-intensive or computationally demanding, making them unsuitable for large-scale screening.
 
-This project develops a machine learning framework to predict the magnetic ordering of materials based on structural, chemical, electronic, and thermodynamic descriptors. Our strategy is two-fold:
+This project aims to develop a machine learning framework capable of predicting the magnetic ordering of materials using structural, chemical, electrical, and thermodynamic coarse-grained descriptors that are already available for a wide range of inorganic materials, with two-fold strategy. The first is to build a ML model that can efficiently predict the type magnetic ordering based on training on the Materials Project database, the primary database for inorganic compounds, to facilitate future large-scale magnetic classifications instead of performing time-consuming DFT calculations. However, it is well known that the magnetic labels on this database suffer from bias towards the Ferromagnetic (FM) class, an issue which roots in the used DFT methods that fail with the absence of ‘semi-’empirical inputs. That being said, it’s still very efficient in identifying magnetic vs. nonmagnetic materials. To partially address this issue, we use another database, MAGNDATA, the most comprehensive database of experimental neutron scattering-based magnetic structures. By training another ML classifier on this database, we can efficiently predict the magnetic propagation vector of a given magnetic material, a quantity that carries some information about the underlying magnetic structure. Finally, this is adapted to the Materials Project database to correct some of the wrongly labelled FMs by showing that the MAGNDATA classifier predicts them to have nonzero propagation vector, contradicting the DFT-assigned labels.
 
-1. **Materials Project Classifier:** We train ML models using the Materials Project (MP) database (~150,000 entries) to classify materials into magnetic ordering types. Although useful, MP labels are biased toward ferromagnetism due to limitations in DFT.
+Stakeholders
 
-2. **MAGNDATA Classifier:** To correct this bias, we build a separate classifier using the experimentally validated MAGNDATA database (~2,100 commensurate magnetic structures) to predict the **propagation vector**, which encodes magnetic structure information. This classifier is then used to revise incorrect MP magnetic labels.
+Materials scientists, Spintronics and quantum technology developers, Experimental condensed matter physicists, Computational materials researchers.
 
----
+KPIs
 
-## 👥 Stakeholders
+Accuracy: Improvement in predicted classification of magnetic orders compared to a baseline classifier (i.e., dummy classifier with a stratified strategy) and compared to a recent research paper (Helena A. Merker, et al., “Machine learning magnetism classifiers from atomic coordinates”, iScience 2022).
 
-- Materials scientists  
-- Spintronics and quantum technology developers  
-- Experimental condensed matter physicists  
-- Computational materials researchers  
+Throughput: Efficient reduction of computational time compared to time-consuming DFT calculations.
 
----
+Bias correction in Materials Project: How many FM compounds on the Materials Project can we predict though the MAGNDATA classifier to be non-FMs.
 
-## 📈 Key Performance Indicators (KPIs)
+Approach
 
-- **Accuracy:** Significant improvement over baseline (stratified dummy classifier) and the benchmark paper: *Merker et al., iScience, 2022*.
-- **Throughput:** Faster predictions compared to time-consuming DFT calculations.
-- **Bias Correction:** Number of mislabelled FM materials in MP reclassified via MAGNDATA predictions.
+The first part focused on supervised classification models to predict the magnetic ordering of materials on the Materials Project which contains ~150,000 materials with magnetic labels, and the second part focused on building an efficient propagation vector classifier on MAGNDATA, containing ~2,100 commensurate magnetic materials, and then applied to compounds on Materials Project.
 
----
+Feature Engineering: The features of our data set include numerical and categorical data spanning structural, compositional, electronic, and thermodynamic descriptors that are physically relevant to magnetism. Based on random forest feature importance, PCS, and features correlation matrix, we find that all our numerical data are needed to explain a majority of the variance of our data. Much of our categorical data is of high cardinality relative to the size of our dataset. Some of these features were removed since they served as unique identifiers and only biased our model. Other features such as chemical composition were broken down into its composition and one-hot encoded based on each part of the composition rather than the unique combination of parts, which we found to boost the accuracy of our classifiers. We removed rows which did not contain our final key features, resulting in just over 100,000 compounds. For the case of materials on MAGNDATA, we used the same set of descriptors after importing them from the Materials Project.
 
-## 🧠 Approach
+Training & Validation & Testing: 60% of the data on the Materials Project were used to train different classifiers: Random Forest, XGBoost, LightGBM, Support Vector Machine, Logistic Regression, k-Nearest Neighbors, Decision Tree and Naive Bayes. Performance of the classifiers was assessed using both the accuracy and the macro average F1 score. The former is chosen to check the overall classifier performance over all classes, and the latter is chosen to check the performance over the minority classes. Four-fold cross validation scores, along with performance over a separate 20% validation set, were used to compare the performance of the different classifiers. For all classifiers, hyperparameter tuning was performed using GridSearchCV.
 
-### 🔧 Feature Engineering
+For the MAGNDATA classifier, 67.5% of the data was used to train two classifiers: Random Forest and XGBoost, with a 6-fold cross validation strategy. Performance was assessed using a separate 22.5% validation set. For both databases, test sets were left as a final sanity check to the best classifier performance.
 
-- Features include numerical and categorical descriptors covering structural, compositional, electronic, and thermodynamic properties.
-- Dimensionality reduction via Random Forest importance, correlation analysis, and PCA.
-- Categorical variables such as chemical composition were one-hot encoded at the element level.
-- Final MP dataset contained ~100,000 cleaned entries.
-- MAGNDATA materials used the same descriptors imported from the Materials Project.
+Merging different subsets: we also check the cases where we merge different classes together, a strategy commonly used in literature to address e.g. the issue of the underrepresented Ferrimagnetic (FiM) class by merging it with the FM class since in both cases, the material has a nonzero net magnetization. Additionally, in order to compare our classifiers with those of the recent research study (mentioned above), we consider the subset of materials which have at least one element that belongs to transitions metals, lanthanides, or actinides. This subset is further modified by merging the FM and the FiM classes together, a strategy used in the aforementioned research article.
 
-### 📊 Training, Validation & Testing
+Results
 
-- **Materials Project:**
-  - 60% training, 20% validation, 20% testing.
-  - Models: Random Forest, XGBoost, LightGBM, SVM, Logistic Regression, kNN, Decision Tree, Naive Bayes.
-  - Metrics: Accuracy and F1-macro.
-  - 4-fold cross-validation and GridSearchCV used for tuning.
+XGBoost classifier with 10 numerical features and 2 categorical features achieved an impressive accuracy of 89% for magnetic class prediction, representing a huge improvement over the 45% accurate baseline dummy classifier with stratified strategy.
 
-- **MAGNDATA:**
-  - 67.5% training, 22.5% validation, 10% testing.
-  - Models: Random Forest, XGBoost.
-  - 6-fold cross-validation.
-  - Used to predict propagation vectors on MP data.
+LightGBM achieves the highest macro average F1 score of 67% and 86% accuracy (third highest).
 
-### 🔄 Subset Merging
+SMOTE was used to slightly enhance the performance over the minority classes for XGBoost.
 
-- FM and FiM merged to reflect common literature practice.
-- Magnetic element subset defined by presence of transition metals, lanthanides, or actinides.
-- Enables fair benchmarking against Merker et al. (2022).
+In all models, feature importance analysis was performed. Additionally, SHAP was applied to XGBoost (for the case of all data) to study the impact of each descriptor over the model's performance.
 
----
+Across the merging of different subsets of data, both XGBoost, LightGBM, and Random Forest stay as the best three classifiers, however changing their rankings in some cases.
 
-## 🧪 Results
+In the case of materials with at least one magnetic element, our LightGBM classifier outperforms the mentioned research study over both the NM and FM/FiM classes, as detailed in the powerpoint presentation.
 
-- **MP Classifier:**
-  - XGBoost: 89% accuracy (vs. 45% baseline), LightGBM: 67% F1-macro and 86% accuracy.
-  - SMOTE improved minority class performance.
-  - SHAP analysis confirmed feature contributions.
-  - Models perform significantly faster than DFT.
+Magnetic class prediction within a few seconds compared to the hours/days DFT calculation can take.
 
-- **MAGNDATA Classifier:**
-  - Random Forest achieved 94% accuracy in predicting propagation vectors.
-  - Applied to MP database, 12,609 FM-labelled materials predicted to have **non-zero propagation vectors**, suggesting likely AFM/FiM behavior → **partial correction of FM bias in MP**.
+94% accurate Random Forest classifier for propagation vector on MAGNDATA.
 
----
+Applying our MAGNDATA propagation vector classifier on the Materials Project database, we identified 12,609 materials on Materials Project that initially DFT-labelled as FMs to have nonzero propagation vector, suggesting that these materials are probably either AFMs or FiMs, therefore partially correcting the FM bias in the Materials Project.
 
-## 🔮 Future Work
+Future Directions
 
-- Incorporating features to predict noncollinear magnetic structures.
-- Developing neural network models to better capture complex structure-property relationships.
+Including more detailed features to predict details of noncollinear magnetic structures.
 
----
+Implementation of Neural Networks to better capture the complexity of the connection between the structure and electronic features to the emergence of magnetic orders.
 
-## 📂 Repository Structure
-
-- `data/`: Cleaned and processed datasets  
-- `models/`: Trained models and configuration  
-- `notebooks/`: Jupyter notebooks for training, evaluation, and visualization  
-- `scripts/`: Utility scripts for data preprocessing and model inference  
-- `results/`: Summary tables, plots, and benchmark comparisons  

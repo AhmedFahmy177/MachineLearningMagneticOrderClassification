@@ -1,8 +1,5 @@
 # Machine Learning Magnetism
 
-**Team**: Ahmed Fahmy, Murod Mirzhalilov, Brandon Abrego, Sayok Chakravarty
-**GitHub**: [https://github.com/AhmedFahmy177/MachineLearningMagneticOrderClassification/tree/main](https://github.com/AhmedFahmy177/MachineLearningMagneticOrderClassification/tree/main)
-
 ## Project Overview
 
 As the demand for scalable, accurate, and cost-effective materials discovery grows, data-driven approaches have become essential to accelerating scientific breakthroughs. Magnetism plays a fundamental role in a wide range of advanced technologies, including spintronic devices, magnetic memory storage, and emerging quantum information systems. However, traditional methods for identifying magnetic properties—such as neutron scattering experiments or density functional theory (DFT) calculations—are either resource-intensive or computationally demanding, making them unsuitable for large-scale screening.
